@@ -1,5 +1,7 @@
 {
 	"motivations": ["knowledge","comfort","reputation","serenity","protection","conquest","wealth","ability","equiptment"],
 	"names": ["Commander Elswerth","Janet Blackwalsh","Ken Bristle","Nicolette Vandal","Multis Scout","Scout"],
-	"places":["Western Settlement","Roanoke","Eastern Settlement","Aurawatch Monastery"]
+	"places":["Western Settlement","Roanoke","Eastern Settlement","Aurawatch Monastery"],
+	"items":["Wood","Gold","Food","Medkits","Guns"],
+	"enemies":["Multis soldiers","Multis shamans","Multis gunnars","Multis horde","Demon soldiers","Demon brutes","Demon bombers","Demon hordes"]
 }

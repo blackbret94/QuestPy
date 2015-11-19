@@ -2,7 +2,9 @@ import json
 import random
 import time
 from pprint import pprint
-# Main class
+# Main class, quick script to bounce ideas around, will be drastically re-written later
+# settings
+restTime = 3;
 
 # read in config file
 with open('QuestConfig.json') as data_file:
@@ -12,6 +14,8 @@ with open('QuestConfig.json') as data_file:
 # save important rows
 names = data["names"]
 places = data["places"]
+items = data["items"]
+enemies = data["enemies"]
 motivations = ["knowledge","comfort","reputation","serenity","protection","conquest","wealth","ability","equiptment"]
 pprint(places)
 
@@ -21,9 +25,11 @@ currentNPC = startNPC
 startLocation = random.choice(places)
 currentLocation = startLocation
 motivation = random.choice(motivations)
+motiveText = "NOTHING YET"
+fullText = "NOTHING YET"
 
-print(startNPC)
-print(startLocation)
+#print(startNPC)
+#print(startLocation)
 
 
 
@@ -84,12 +90,90 @@ def chooseMotivation(prevMot,success):
 		else:
 			return random.choice(["knowledge","reputation"])
 
-# quest text for the object, takes motivation
-#def chooseText(motive):
-	#something
+# chooses a subject for a motive, takes motive
+def chooseSubject(motive):
+	if(motive == "knowledge"):
+		return random.choice(enemies+items+names+places)
+
+	elif(motive == "comfort"):
+		return currentNPC
+
+	elif(motive == "reputation"):
+		return currentNPC
+
+	elif(motive == "serenity"):
+		return currentNPC
+
+	elif(motive == "protection"):
+		return currentNPC
+		
+	elif(motive == "conquest"):
+		return random.choice(enemies)
+
+	elif(motive == "wealth"):
+		return random.choice(items)
+
+	elif(motive == "ability"):
+		return random.choice(enemies)
+
+	elif(motive == "equiptment"):
+		return random.choice(items)
+
+
+# quest text for the object, takes motivation and quest subject
+def chooseText(motive, subject):
+	txt = ""
+	if(motive == "knowledge"):
+		txt += "learn about "
+
+	elif(motive == "comfort"):
+		txt += "comfort "
+
+	elif(motive == "reputation"):
+		txt += "establish your reputation for "
+
+	elif(motive == "serenity"):
+		txt += "bring peace to "
+
+	elif(motive == "protection"):
+		txt += "protect "
+		
+	elif(motive == "conquest"):
+		txt += "defeat "
+
+	elif(motive == "wealth"):
+		txt += "gather "
+
+	elif(motive == "ability"):
+		txt += "learn the ability to "
+
+	elif(motive == "equiptment"):
+		txt += "use "
+
+	# mention subject
+	txt += subject
+
+	# return
+	return txt
 
 # choose next motivation
 while(True):
-	print(motivation)
-	time.sleep(1)
-	motivation = chooseMotivation(motivation,random.choice([True,False]))
+	time.sleep(restTime)
+	# suc/fail
+	suc = random.choice([True,False])
+
+	# create text block
+	if(suc):
+		fullText = "Good work! Now "
+	else:
+		fullText = "After failing to " + motiveText + ", "
+
+
+	# next motive
+	motivation = chooseMotivation(motivation,suc)
+	motiveText = chooseText(motivation,chooseSubject(motivation))
+
+	# finish text block
+	fullText += motiveText
+
+	print(fullText)

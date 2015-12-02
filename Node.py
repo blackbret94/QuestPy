@@ -10,12 +10,12 @@ class Node:
 		self.item = "NOTHING"
 
 	# constructor with param
-	def __init__(self,motive,npc,item,suc,questPy):
+	def __init__(self,motive,npc,item,suc,questData):
 		self.motive = motive
 		self.NPC = npc
 		self.item = item
 		self.suc = suc
-		self.questPy = questPy
+		self.questData = questData
 
 		self.run()
 
@@ -25,7 +25,7 @@ class Node:
 		print(self.buildTextBlock())
 
 		# pause
-		time.sleep(self.questPy.restTime)
+		time.sleep(self.questData.restTime)
 
 		# suc or fail?
 		nextSuc = random.choice([True,False])
@@ -37,8 +37,8 @@ class Node:
 
 		# choose next item
 
-		# create next node, should pass to questPy list
-		nextNode = Node(nextMotive,self.NPC,self.item,nextSuc,self.questPy)
+		# create next node, should pass to questData list
+		nextNode = Node(nextMotive,self.NPC,self.item,nextSuc,self.questData)
 
 	# creates a text block
 	def buildTextBlock(self):
@@ -60,8 +60,8 @@ class Node:
 	# chooses a subject for a motive, takes motive
 	def chooseSubject(self,motive):
 		if(motive == "knowledge"):
-			questPy = self.questPy
-			return random.choice(questPy.enemies+questPy.items+questPy.names+questPy.places)
+			questData = self.questData
+			return random.choice(questData.enemies+questData.items+questData.names+questData.places)
 
 		elif(motive == "comfort"):
 			return self.NPC
@@ -76,16 +76,16 @@ class Node:
 			return self.NPC
 			
 		elif(motive == "conquest"):
-			return random.choice(self.questPy.enemies)
+			return random.choice(self.questData.enemies)
 
 		elif(motive == "wealth"):
-			return random.choice(self.questPy.items)
+			return random.choice(self.questData.items)
 
 		elif(motive == "ability"):
-			return random.choice(self.questPy.enemies)
+			return random.choice(self.questData.enemies)
 
 		elif(motive == "equiptment"):
-			return random.choice(self.questPy.items)
+			return random.choice(self.questData.items)
 
 
 	# quest text for the object, takes motivation and quest subject
@@ -125,7 +125,7 @@ class Node:
 		return txt
 
 	# chooses a new motivation, takes previous motivation and success of that quest
-	# future iteration will set a first sentence for the quest text based on the outcome
+	# has a chance to change items, characters, and places as well
 	def chooseMotivation(self,prevMot,success):
 		if(prevMot == "knowledge"):
 			if (success):
@@ -180,3 +180,35 @@ class Node:
 				return random.choice(["conquest","protection","ability"])
 			else:
 				return random.choice(["knowledge","reputation"])
+
+	# changes some values and pushes the old state to the stack.  All param are booleans
+	def changeData(self,npc,item,place):
+		# if anything is to change, push old state
+		if(npc or item or place):
+			pushToStack()
+
+		if(npc):
+			# change NPC
+			self.npc = random.choice(questData.names)
+		if(item):
+			# change item
+			self.npc = random.choice(questData.items)
+
+		if (place):
+			# change place
+			self.npc = random.choice(questData.places)
+
+
+
+
+	# pushes current set of info to the parent stack
+	def pushToStack(self):
+		newDict = dict(npc=self.npc,item=self.item)
+		self.questData.append(newDict)
+
+	# pops the current set of info from the parent stack
+	def popFromStack(self):
+		if(len(self.questData.stack) > 0):
+			poppedDict = self.questData.stack.pop()
+			self.npc = poppedDict.npc
+			self.item = poppedDict.item

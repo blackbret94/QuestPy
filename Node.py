@@ -33,9 +33,8 @@ class Node:
 		# choose next motive
 		nextMotive = self.chooseMotivation(self.motive,nextSuc)
 
-		# choose next NPC
-
-		# choose next item
+		# choose and set new data
+		self.chooseNewData(nextMotive,nextSuc)
 
 		# create next node, should pass to questData list
 		nextNode = Node(nextMotive,self.NPC,self.item,nextSuc,self.questData)
@@ -181,34 +180,66 @@ class Node:
 			else:
 				return random.choice(["knowledge","reputation"])
 
-	# changes some values and pushes the old state to the stack.  All param are booleans
+	# chances data based on the new motive and whether it was a pass or fail
+	def chooseNewData(self,motive,success):
+		# if fail pop
+		if(not success):
+			self.popFromStack()
+			return
+
+		# else choose new data
+		if(motive == "knowledge"):
+			self.changeData(0,.5,.5)
+
+		elif(motive == "comfort"):
+			self.changeData(0,0,0)
+
+		elif(motive == "reputation"):
+			self.changeData(0,0,0)
+
+		elif(motive == "serenity"):
+			self.changeData(0,1,0)
+
+		elif(motive == "protection"):
+			self.changeData(0,0,.25)
+
+		elif(motive == "conquest"):
+			self.changeData(.5,.25,.5)
+
+		elif(motive == "wealth"):
+			self.changeData(0,1,.75)
+
+		elif(motive == "ability"):
+			self.changeData(0,.5,.75)
+
+		elif(motive == "equiptment"):
+			self.changeData(0,.75,.25)
+
+	# changes some values and pushes the old state to the stack.  All param are values between 0 and 1, with 1 meaning always 0 being never
 	def changeData(self,npc,item,place):
 		# if anything is to change, push old state
-		if(npc or item or place):
-			pushToStack()
+		if(npc > 0 or item > 0 or place > 0):
+			self.pushToStack()
 
-		if(npc):
+		if(random.random() < npc):
 			# change NPC
 			self.npc = random.choice(questData.names)
-		if(item):
+		if(random.random() < item):
 			# change item
 			self.npc = random.choice(questData.items)
 
-		if (place):
+		if (random.random() < place):
 			# change place
 			self.npc = random.choice(questData.places)
 
-
-
-
 	# pushes current set of info to the parent stack
 	def pushToStack(self):
-		newDict = dict(npc=self.npc,item=self.item)
+		newDict = dict(NPC=self.NPC,item=self.item)
 		self.questData.append(newDict)
 
 	# pops the current set of info from the parent stack
 	def popFromStack(self):
 		if(len(self.questData.stack) > 0):
 			poppedDict = self.questData.stack.pop()
-			self.npc = poppedDict.npc
+			self.NPC = poppedDict.NPC
 			self.item = poppedDict.item

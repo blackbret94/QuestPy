@@ -20,7 +20,7 @@ class Motivation(Enum):
 # settings
 class QuestData:
 	def __init__(self):
-		self.restTime = 3;
+		self.restTime = 2.5;
 
 		# read in config file
 		with open('QuestConfig.json') as data_file:

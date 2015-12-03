@@ -33,6 +33,7 @@ class QuestData:
 		self.items = self.data["items"]
 		self.enemies = self.data["enemies"]
 		self.motivations = ["knowledge","comfort","reputation","serenity","protection","conquest","wealth","ability","equiptment"]
+		self.motiveText = ""
 
 		# stack of data
 		self.stack = list()

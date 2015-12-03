@@ -41,16 +41,21 @@ class Node:
 
 	# creates a text block
 	def buildTextBlock(self):
-		# next motive
-		motiveText = self.chooseText(self.motive,self.chooseSubject(self.motive))
-
+		# start text
 		if(self.suc):
 			fullText = "Good work! Now "
 		else:
-			fullText = "After failing to " + motiveText + ", "
+			fullText = "After failing to " + self.questData.motiveText + ", "
+
+		# next motive
+		#lastMotiveText = self.motiveText
+		self.questData.motiveText = self.chooseText(self.motive,self.chooseSubject(self.motive))
 
 		# finish text block
-		fullText += motiveText
+		fullText += self.questData.motiveText
+
+		# save
+		#self.lastMotiveText = motiveText
 
 		return fullText
 
@@ -223,23 +228,23 @@ class Node:
 
 		if(random.random() < npc):
 			# change NPC
-			self.npc = random.choice(questData.names)
+			self.npc = random.choice(self.questData.names)
 		if(random.random() < item):
 			# change item
-			self.npc = random.choice(questData.items)
+			self.npc = random.choice(self.questData.items)
 
 		if (random.random() < place):
 			# change place
-			self.npc = random.choice(questData.places)
+			self.npc = random.choice(self.questData.places)
 
 	# pushes current set of info to the parent stack
 	def pushToStack(self):
-		newDict = dict(NPC=self.NPC,item=self.item)
-		self.questData.append(newDict)
+		newDict = dict([('NPC', self.NPC),('item', self.item)])
+		self.questData.stack.append(newDict)
 
 	# pops the current set of info from the parent stack
 	def popFromStack(self):
 		if(len(self.questData.stack) > 0):
 			poppedDict = self.questData.stack.pop()
-			self.NPC = poppedDict.NPC
-			self.item = poppedDict.item
+			self.NPC = poppedDict['NPC']
+			self.item = poppedDict['item']
